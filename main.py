@@ -1,3 +1,4 @@
+import random
 from random import choice
 
 
@@ -16,13 +17,13 @@ class Human:
 
     def get_car(self):
         self.car = Auto(auto)
+    def get_job(self):
+        if self.car.drive():
+            pass
+        else:
+            self.to_repair()
+        self.job = Job(option_work)
 
-        def get_job(self):
-            if self.car.drive():
-                pass
-            else:
-                self.to_repair()
-                self.job = Job(option_work)
 
     def eat(self):
         if self.home.food <= 0:
@@ -97,8 +98,46 @@ class Human:
         if self.money <= -100:
             print('Bankrupt....')
             return False
+    def live(self, day):
+        if self.is_alive() == False:
+            return False
+        if self.home is None:
+            print("Settle in the house!")
+            self.get_home()
+        if self.car is None:
+            self.get_car()
+            print(f'I bought a car {self.car.brand}')
+        if self.job is None:
+            self.get_job()
+            print(f"I working {self.job.work} salary {self.job.salary}")
+        self.days_indexes(day)
+        dice = random.randint(1, 4)
+        if self.satiety < 10:
+            print("Time to eat!")
+            self.eat()
+        elif self.gladness < 5:
+            print("Time to chill")
+            self.chill()
+        elif self.money <= 5:
+            print('Time to Work')
+            self.work()
+        elif self.car.strength < 5:
+            print('Time to repair')
+            self.to_repair()
+        if dice == 1:
+            print("Time to chill")
+            self.chill()
+        elif dice == 2:
+            print("Let's working")
+            self.work()
+        elif dice == 3:
+            print("Cleaning home")
+            self.clean_home()
+        elif dice == 4:
+            print("I'm happy!")
+            manage = "delicacies"
+            self.shopping(manage)
 
-    # Зупинились
     def chill(self):
         pass  # Home Work
 
@@ -146,4 +185,7 @@ auto = {"BMW": {"fuel": 50, "strength": 100, "consumption": 18},
         "OPEL": {"fuel": 30, "strength": 60, "consumption": 12},
         "FORD": {"fuel": 35, "strength": 80, "consumption": 10}, }
 
-nick = Human()
+nick = Human("Nick")
+for day in range(1, 366):
+    if nick.live(day) == False:
+        break
